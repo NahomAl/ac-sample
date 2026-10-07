@@ -18,6 +18,5 @@ def index():
 
 @app.get("/hog") # Force a massive allocation that ignores cgroup slack
 def hog():
-    # Allocates 3,000 Megabytes instantly overwhelming the container limits
-    data = bytearray(3000 * 1024 * 1024)
+    data = bytearray(600 * 1024 * 1024)
     return f"allocated {len(data)} bytes"
