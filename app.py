@@ -10,14 +10,14 @@ def health():
 
 @app.get("/")
 def index():
-    # Use the context manager to open the connection and cursor cleanly
     with psycopg.connect(os.environ["DATABASE_URL"]) as conn:
         with conn.cursor() as cur:
             cur.execute("SELECT NOW();")
-            now = cur.fetchone()[0] # Safely extract the raw timestamp element
+            now = cur.fetchone()[0]
     return f"Hello from ActiveCloud. Database time: {now}"
 
-@app.get("/hog") # used only to test memory limits
+@app.get("/hog") # Force a massive allocation that ignores cgroup slack
 def hog():
-    data = bytearray(500 * 1024 * 1024)
+    # Allocates 3,000 Megabytes instantly overwhelming the container limits
+    data = bytearray(3000 * 1024 * 1024)
     return f"allocated {len(data)} bytes"
